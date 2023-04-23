@@ -1,0 +1,274 @@
+Exercise 1
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+contract HelloWorld {
+ string public greet = "Hello World!";
+}
+
+----------
+
+Exercise 2
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+contract Factory {
+ uint idDigits = 16;
+}
+
+-------------------
+
+Exercise 3
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+contract Factory {
+ uint idDigits = 16;
+ uint idModulus = idDigits * 10 ** 2;
+
+}
+------------------
+
+Exercise 4
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+struct Product 
+{
+ uint Id;
+ string name;
+}
+contract Factory {
+    Product pipe = Product(10, "Stainless steel");
+}
+----------------
+
+Exercise 5
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+contract Factory {
+struct Product 
+{
+ uint Id;
+ string name;
+}
+
+Product[] public products;
+}
+-------------------
+
+Exercise 6
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+contract Factory
+{
+    uint[] ids;
+    string[] names;
+  
+
+function createProduct(string memory _name, uint _id)
+private 
+{
+    ids.push(_id);
+    names.push(_name);
+   
+}
+}
+--------------------------------
+
+Exercise 7
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+contract Factory
+
+{
+    
+    //uint[] ids;
+    //string[] names;
+  function generaterandomid(string memory _str) private view returns (uint)
+    {
+    } 
+    }
+
+--------------------------------
+
+Exercise 8
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+contract Factory
+
+{
+ function generaterandomid(string memory _str) private pure returns (uint) {
+ {
+    uint idModulus = 10**16; // set the modulus to 16 digits
+    uint rand = uint(keccak256(abi.encodePacked(_str))); // generate a pseudo-random number
+    return rand % idModulus; // return the random number modulo the modulus
+}
+
+    }
+    }
+--------------------------
+
+Exercise 8-2
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+
+contract Factory {
+    function generaterandomid(string memory _str) private pure returns (uint) {
+        uint idModulus = 10**16; // set the modulus to 16 digits
+        uint rand = uint(keccak256(abi.encodePacked(_str))); // generate a pseudo-random number
+        return rand % idModulus; // return the random number modulo the modulus
+    }
+    
+    function createRandomProduct(string memory _name) public {
+        uint randId = generaterandomid(_name);
+        _createProduct(_name, randId);
+    }
+    
+    function _createProduct(string memory _name, uint _randId) private {
+        // implementation details for creating a new product
+        // using the given name and random ID
+    }
+}
+-----------------------------
+
+Exercise 9
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+
+contract Factory {
+    uint[] public products;
+    
+    event NewProduct(uint indexed ArrayProductId, string name, uint id);
+    
+    function generaterandomid(string memory _str) private pure returns (uint) {
+        uint idModulus = 10**16; // set the modulus to 16 digits
+        uint rand = uint(keccak256(abi.encodePacked(_str))); // generate a pseudo-random number
+        return rand % idModulus; // return the random number modulo the modulus
+    }
+    
+    function createRandomProduct(string memory _name) public {
+        uint randId = generaterandomid(_name);
+        _createProduct(_name, randId);
+    }
+    
+    function _createProduct(string memory _name, uint _randId) private {
+        uint productId = products.push(_randId) - 1;
+        emit NewProduct(productId, _name, _randId);
+    }
+}
+
+
+
+-----------
+
+Exercise 10
+
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+
+contract ProductOwnership {
+    mapping (uint => string) productToOwner;
+    mapping (string => uint) ownerProductCount;
+
+}
+------------------
+
+Exercise 11
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+
+contract ProductOwnership {
+    mapping (uint => address) public productToOwner;
+    mapping (address => uint) public ownerProductCount;
+
+    function assignOwnership(uint productId) public {
+        productToOwner[productId] = msg.sender;
+        ownerProductCount[msg.sender]++;
+    }
+}
+
+-------------------------
+
+Exercise 12
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity ^0.8.10;
+
+function getProductsByOwner(address _owner) external view returns (uint[] memory) {
+    uint counter = 0;
+    uint[] memory result = new uint[](ownerProductCount[_owner]);
+    for (uint i = 0; i < products.length; i++) {
+        if (productToOwner[i] == _owner) {
+            result[counter] = i;
+            counter++;
+        }
+    }
+    return result;
+}
+
+---------------------------------
+
+Exercise 13
+
+// contracts/Box.sol
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+// Import Ownable from the OpenZeppelin Contracts library
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+// Make Box inherit from the Ownable contract
+contract Box is Ownable {
+    uint256 private _value;
+
+    event ValueChanged(uint256 value);
+
+    // The onlyOwner modifier restricts who can call the store function
+    function store(uint256 value) public onlyOwner {
+        _value = value;
+        emit ValueChanged(value);
+    }
+
+    function retrieve() public view returns (uint256) {
+        return _value;
+    }
+}
+
+
+note: this exercise was developed jointly.
+
+
+
+---------------------------------
+
+Exercise 14
+
+
+pragma solidity ^0.8.0;
+
+contract User {
+    mapping(uint => uint) public age;
+
+    modifier olderThan(uint _age, uint _userId) {
+        require(age[_userId] >= _age, "User is not old enough");
+        _;
+    }
+
+    function validationUsers(uint _userId) public view olderThan(18, _userId) {
+        // function body left blank
+    }
+}
+
+
+------------------------------------
+
+
