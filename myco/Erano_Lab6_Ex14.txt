@@ -1,0 +1,24 @@
+//Exercise14.Erano
+
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.5.0 <0.8.0;  
+
+contract User {
+    mapping (uint => uint) public age;
+
+    modifier olderThan(uint _age, uint _userId) {
+        require(age[_userId] >= _age, "User is not old enough");
+        _;
+    }
+
+    function setAge(uint userId, uint userAge) public {
+        age[userId] = userAge;
+    }
+
+    function getAge(uint userId) public view returns (uint) {
+        return age[userId];
+    }
+
+    function validationUsers(uint _userId) public view olderThan(18, _userId) {
+    }
+}

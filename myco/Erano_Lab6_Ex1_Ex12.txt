@@ -1,0 +1,57 @@
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.5.0 <0.8.0;                                                  //Exercise1.Erano
+contract Factory {
+        uint idDigits = 16;                                                      //Exercise2
+        uint idModulus = 10 ** uint(idDigits);                                   //Exercise3
+
+    struct Product {                                                             //Exercise4
+ 		uint id;
+ 		string name;
+        }
+    
+    Product[] public products;                                                   //Exercise5
+
+    function _createProduct(string memory _name, uint _id) private {             //Exercise6
+        products.push(Product({
+            name: _name,
+            id: _id
+        }));
+
+    uint productId = products.length - 1;                                        //Exercise9
+    emit NewProduct(productId, _name, _id);
+
+    }
+
+    function _generateRandomId(string memory _str) private view returns (uint) { //Exercise7
+        uint rand = uint(keccak256(abi.encodePacked(_str)));                     //Exercise8
+        return rand % idModulus;
+    }
+    
+    function createRandomProduct(string memory _name) public {
+        uint randId = _generateRandomId(_name);
+        _createProduct(_name, randId);
+    }
+
+    event NewProduct(uint indexed ArrayProductId, string name, uint id);         //Exercise9
+
+    mapping (uint => address) public productToOwner;                             //Exercise10
+    mapping(address => uint) public ownerProductCount;
+
+    function ownership(uint _productId) public {                                 //Exercise11
+    productToOwner[_productId] = msg.sender;
+    ownerProductCount[msg.sender]++;
+    }
+
+   function getProductsByOwner(address _owner) external view returns (uint[] memory) {	//Exercise12
+    uint[] memory result = new uint[](ownerProductCount[_owner]);
+    uint counter = 0;
+    for (uint i = 0; i < products.length; i++) {
+        if (productToOwner[i] == _owner) {
+            result[counter] = i;
+            counter++;
+        }
+    }
+    return result;
+    }
+
+}
